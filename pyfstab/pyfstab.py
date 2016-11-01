@@ -1,45 +1,68 @@
 #!/usr/bin/env python3
 
+
+
 """
 
 A python 3 fstab parser/editor library.
 
+Fstab class expects a valid path to be passed or /etc/fstab to exist. If not it will create a file object that will
+need written to the disk.
+
 """
 
-import tempfile # To create a file in memory
+import tempfile # To create a tmp file if /etc/fstab doesn't exist and no file is passed.
+import os.path
 
 class Fstab():
-    """ Creates or opens a new fstab file. """
+    """ Creates or opens a new fstab object. """
 
-    def __init__(self,path):
+    def __init__(self,path='/etc/fstab'):
         """ Initiates the fstab file object for parsing """
-        print('Initiated object, passed:' + path)
-
         self.fstab_file = path
 
-        if (self.fstab_file == False) or (self.fstab_file == None) :
-            self.create(self.fstab_file)
-        else:
+        if (str(self.fstab_file) == True) and (os.path.isfile(self.fstab_file) == True):
+            # We have a (valid) file!
             self.read(self.fstab_file)
+        else:
+            self.create(self, path=None, header=True)
 
-    def create(self):
-        """ Create a new fstab file, hold it in memory until it is written to disk """
+    #todo
+    def create(self, header=True, description=False):
+        """ Create a new fstab file.
 
+            Optional arguments:
+
+            header (True/False) - Appends a long header to the top of the file.
+            description (True/False) - Appends a small definition to the top of the file (use this if header = False
+            path - Will create a file on the disk immediately at this location. Defaults to tempfile in memory
+
+            """
+        t = tempfile.NamedTemporaryFile
+
+        #todo
+        if header == True:
+            pass
+        #todo
+        if description == True:
+            # <fs>			<mountpoint>	<type>		<opts>		<dump/pass>
+            pass
+    #todo
     def read(self, path):
         """ Loads /etc/fstab unless an alternate file path is passed"""
         print('Passed' + path)
         with open('path', 'r') as f:
              fstab = f.read()
             return fstab
-
+    #todo
     def write(self):
         """ Writes the file back to the disk"""
         print('Wrote fstab file')
-
+    #todo
     def add_entry(self):
         """Adds a fstab entry"""
         print('Adds fstab entry')
-
+    #todo
     def remove_entry(self):
         """
         Removes a fstab entry.
@@ -52,7 +75,8 @@ class Fstab():
         """
         print('Removes fstab entry ')
 
-    def error_check(self):
+    #todo
+    def parse(self):
         """ Parses fstab file for syntax errors """
         print('Checking fstab for errors')
 
